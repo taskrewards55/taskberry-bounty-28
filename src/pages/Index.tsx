@@ -4,6 +4,9 @@ import { TaskCard } from "@/components/TaskCard";
 import { Button } from "@/components/ui/button";
 import VisionSection from "@/components/VisionSection";
 import EarnWaysSection from "@/components/EarnWaysSection";
+import { TasksForEveryone } from "@/components/TasksForEveryone";
+import { GlobalEarning } from "@/components/GlobalEarning";
+import { InstantPayments } from "@/components/InstantPayments";
 
 const tasks = [
   {
@@ -53,6 +56,9 @@ const Index = () => {
         </div>
       </section>
 
+      <TasksForEveryone />
+      <GlobalEarning />
+      <InstantPayments />
       <VisionSection />
       <EarnWaysSection />
       <HowItWorks />
