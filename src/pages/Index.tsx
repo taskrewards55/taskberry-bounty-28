@@ -7,6 +7,8 @@ import EarnWaysSection from "@/components/EarnWaysSection";
 import { TasksForEveryone } from "@/components/TasksForEveryone";
 import { GlobalEarning } from "@/components/GlobalEarning";
 import { InstantPayments } from "@/components/InstantPayments";
+import { EarnFromDevices } from "@/components/EarnFromDevices";
+import { FAQ } from "@/components/FAQ";
 
 const tasks = [
   {
@@ -61,6 +63,7 @@ const Index = () => {
       <InstantPayments />
       <VisionSection />
       <EarnWaysSection />
+      <EarnFromDevices />
       <HowItWorks />
 
       {/* Tasks Section */}
@@ -76,6 +79,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <FAQ />
     </div>
   );
 };
