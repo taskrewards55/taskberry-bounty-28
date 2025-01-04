@@ -11,6 +11,7 @@ import { FAQ } from "@/components/FAQ";
 import { TopPicks } from "@/components/TopPicks";
 import { Leaderboard } from "@/components/Leaderboard";
 import { LatestRewards } from "@/components/LatestRewards";
+import { TaskTypes } from "@/components/TaskTypes";
 
 const Index = () => {
   return (
@@ -36,6 +37,7 @@ const Index = () => {
         </div>
       </section>
 
+      <TaskTypes />
       <TopPicks />
       <Leaderboard />
       <LatestRewards />
