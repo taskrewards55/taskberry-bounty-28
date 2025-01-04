@@ -27,15 +27,15 @@ export const TopPicks = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-900">
+    <section className="py-12 md:py-16 bg-gray-900">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-white">Top Picks</h2>
-          <button className="text-blue-400 hover:text-blue-300 flex items-center gap-2">
+        <div className="flex justify-between items-center mb-6 md:mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-white">Top Picks</h2>
+          <button className="text-blue-400 hover:text-blue-300 flex items-center gap-2 text-sm md:text-base">
             View all <ArrowRight className="w-4 h-4" />
           </button>
         </div>
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {tasks.map((task, index) => (
             <div key={index} className="animate-fade-up" style={{ animationDelay: `${index * 100}ms` }}>
               <TaskCard {...task} />
