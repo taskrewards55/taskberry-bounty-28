@@ -12,7 +12,7 @@ export const TaskCard = ({ logo, title, description, reward, amount }: TaskCardP
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <CardHeader className="p-6">
-        <img src={logo} alt={title} className="h-12 w-auto" />
+        <img src="/lovable-uploads/27415bf1-da36-4237-8aaa-9a608ddb986d.png" alt={title} className="h-12 w-auto" />
       </CardHeader>
       <CardContent className="bg-gray-900 text-white p-6">
         <h3 className="text-xl font-semibold mb-2">{title}</h3>
