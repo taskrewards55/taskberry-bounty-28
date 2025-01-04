@@ -1,4 +1,4 @@
-import { Devices, Smartphone, Laptop, Tablet } from "lucide-react";
+import { Smartphone, Laptop, Tablet } from "lucide-react";
 
 export const EarnFromDevices = () => {
   return (
