@@ -2,6 +2,8 @@ import { Header } from "@/components/Header";
 import { HowItWorks } from "@/components/HowItWorks";
 import { TaskCard } from "@/components/TaskCard";
 import { Button } from "@/components/ui/button";
+import VisionSection from "@/components/VisionSection";
+import EarnWaysSection from "@/components/EarnWaysSection";
 
 const tasks = [
   {
@@ -51,6 +53,8 @@ const Index = () => {
         </div>
       </section>
 
+      <VisionSection />
+      <EarnWaysSection />
       <HowItWorks />
 
       {/* Tasks Section */}
