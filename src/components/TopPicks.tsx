@@ -5,24 +5,24 @@ export const TopPicks = () => {
   const tasks = [
     {
       logo: "/lovable-uploads/9a81cda6-0a22-4132-8bd8-ce4b58d0aa9e.png",
-      title: "Surveys",
-      description: "Share your opinion to earn!",
-      reward: "0.51",
-      amount: "$0.59",
+      title: "Market Research",
+      description: "Complete quick market surveys!",
+      reward: "1.25",
+      amount: "$1.45",
     },
     {
       logo: "/lovable-uploads/629059a5-f1bf-40ab-848b-c7235da57628.png",
-      title: "Honeygain",
-      description: "Share your spare internet!",
-      reward: "0.95",
-      amount: "$1.09",
+      title: "Data Sharing",
+      description: "Share unused bandwidth safely",
+      reward: "2.50",
+      amount: "$2.89",
     },
     {
       logo: "/lovable-uploads/738b88e7-1781-4f01-ae47-bd233939517f.png",
-      title: "Videos",
-      description: "Watch videos & earn!",
-      reward: "0.01978",
-      amount: "$0.02",
+      title: "Game Testing",
+      description: "Play & test new mobile games",
+      reward: "0.75",
+      amount: "$0.87",
     },
   ];
 
