@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import * as React from "react";
 
 interface Reward {
   icon: string;
