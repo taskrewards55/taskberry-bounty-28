@@ -1,12 +1,40 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [session, setSession] = useState<any>(null);
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Successfully signed out!");
+      navigate("/");
+    }
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -41,9 +69,15 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <Button className="bg-emerald-500 hover:bg-emerald-600">
-            Sign In
-          </Button>
+          {session ? (
+            <Button onClick={handleSignOut} variant="destructive">
+              Sign Out
+            </Button>
+          ) : (
+            <Button onClick={() => navigate("/auth")} className="bg-emerald-500 hover:bg-emerald-600">
+              Sign In
+            </Button>
+          )}
           {isMobile && (
             <Button variant="ghost" size="icon" onClick={toggleMenu} className="text-gray-300">
               <Menu className="h-6 w-6" />
@@ -52,7 +86,6 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobile && isMenuOpen && (
         <nav className="bg-gray-900 px-4 py-2 animate-fade-up">
           <div className="flex flex-col space-y-4">
