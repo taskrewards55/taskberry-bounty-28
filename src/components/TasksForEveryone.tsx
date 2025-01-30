@@ -18,7 +18,7 @@ export const TasksForEveryone = () => {
           </div>
           <div className="w-full lg:w-1/2">
             <img 
-              src="/lovable-uploads/f8c98310-aa4c-45d8-98f2-af6944c9545c.png" 
+              src="/lovable-uploads/738b88e7-1781-4f01-ae47-bd233939517f.png" 
               alt="Task categories showing different ways to earn"
               className="w-full h-auto rounded-lg shadow-xl animate-fade-up"
             />
