@@ -1,11 +1,51 @@
+import { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { Card } from "./ui/card";
+import { supabase } from "@/integrations/supabase/client";
 
 export const EarningsOverview = () => {
-  // This would typically come from an API
-  const balance = 80;
+  const [balance, setBalance] = useState(0);
   const withdrawalThreshold = 100;
+
+  useEffect(() => {
+    // Initial fetch of balance
+    const fetchBalance = async () => {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('balance')
+        .single();
+      
+      if (profile) {
+        setBalance(profile.balance);
+      }
+    };
+
+    fetchBalance();
+
+    // Subscribe to real-time balance updates
+    const channel = supabase
+      .channel('balance-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'profiles',
+          filter: `id=eq.${supabase.auth.getUser()?.data?.user?.id}`,
+        },
+        (payload) => {
+          if (payload.new) {
+            setBalance(payload.new.balance);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   return (
     <div className="space-y-4">

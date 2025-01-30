@@ -1,15 +1,67 @@
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
 import { Share2, Gift } from "lucide-react";
-import { generateReferralCode } from "@/utils/referralUtils";
+import { supabase } from "@/integrations/supabase/client";
 
 export const ReferralSection = () => {
-  // This would typically come from an API
-  const referralCode = generateReferralCode();
-  const referralCount = 5;
-  const totalBonus = referralCount * 10; // $10 per referral
+  const [referralCode, setReferralCode] = useState("");
+  const [referralCount, setReferralCount] = useState(0);
+  const [totalBonus, setTotalBonus] = useState(0);
+
+  useEffect(() => {
+    // Initial fetch of referral data
+    const fetchReferralData = async () => {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('referral_code')
+        .single();
+
+      if (profile) {
+        setReferralCode(profile.referral_code);
+      }
+
+      const { count } = await supabase
+        .from('referrals')
+        .select('*', { count: 'exact' })
+        .eq('referrer_id', supabase.auth.getUser()?.data?.user?.id);
+
+      if (count !== null) {
+        setReferralCount(count);
+        setTotalBonus(count * 10);
+      }
+    };
+
+    fetchReferralData();
+
+    // Subscribe to real-time referral updates
+    const channel = supabase
+      .channel('referral-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'referrals',
+          filter: `referrer_id=eq.${supabase.auth.getUser()?.data?.user?.id}`,
+        },
+        () => {
+          setReferralCount(prev => {
+            const newCount = prev + 1;
+            setTotalBonus(newCount * 10);
+            toast.success("New referral bonus earned!");
+            return newCount;
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(referralCode);

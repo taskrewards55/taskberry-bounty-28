@@ -1,12 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "./ui/card";
 import { TaskCategory } from "./TaskCategory";
 import { Task } from "@/types/task";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export const TaskList = () => {
-  const [completedTaskCount] = useState(20);
-  const [totalEarnings] = useState(15);
+  const [completedTaskCount, setCompletedTaskCount] = useState(20);
+  const [totalEarnings, setTotalEarnings] = useState(15);
   const isPremiumUnlocked = completedTaskCount >= 50;
+
+  useEffect(() => {
+    // Subscribe to profile changes for real-time earnings updates
+    const channel = supabase
+      .channel('profile-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'profiles',
+          filter: `id=eq.${supabase.auth.getUser()?.data?.user?.id}`,
+        },
+        (payload) => {
+          if (payload.new) {
+            setTotalEarnings(payload.new.balance);
+            toast.success("Earnings updated!");
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const basicTasks: Task[] = [
     {
