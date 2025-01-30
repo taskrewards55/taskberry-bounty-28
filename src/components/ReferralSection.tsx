@@ -2,12 +2,14 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
-import { Share2 } from "lucide-react";
+import { Share2, Gift } from "lucide-react";
+import { generateReferralCode } from "@/utils/referralUtils";
 
 export const ReferralSection = () => {
   // This would typically come from an API
-  const referralCode = "USER123XYZ";
+  const referralCode = generateReferralCode();
   const referralCount = 5;
+  const totalBonus = referralCount * 10; // $10 per referral
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(referralCode);
@@ -33,15 +35,25 @@ export const ReferralSection = () => {
           </Button>
         </div>
 
-        <div className="mt-4">
-          <p className="text-gray-300">Successful Referrals</p>
-          <p className="text-3xl font-bold">{referralCount}</p>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-gray-300">Successful Referrals</p>
+            <p className="text-3xl font-bold">{referralCount}</p>
+          </div>
+          <div>
+            <p className="text-gray-300">Total Bonus Earned</p>
+            <p className="text-3xl font-bold text-green-500">${totalBonus}</p>
+          </div>
         </div>
 
-        <div className="bg-gray-700 p-4 rounded-lg">
-          <p className="text-sm text-gray-300">
-            Share your referral code with friends and earn a bonus when they complete their first task!
-          </p>
+        <div className="bg-gray-700 p-4 rounded-lg flex items-start gap-3">
+          <Gift className="w-5 h-5 text-yellow-500 mt-1" />
+          <div>
+            <p className="font-semibold text-yellow-500">Referral Bonus</p>
+            <p className="text-sm text-gray-300">
+              Share your referral code with friends and both of you will receive a $10 bonus when they complete their first task!
+            </p>
+          </div>
         </div>
       </div>
     </Card>

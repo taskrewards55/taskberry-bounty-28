@@ -1,7 +1,7 @@
 import { Check, Award } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { useToast } from "./ui/use-toast";
+import { toast } from "sonner";
 
 interface Task {
   id: string;
@@ -12,8 +12,6 @@ interface Task {
 }
 
 export const TaskList = () => {
-  const { toast } = useToast();
-
   // This would typically come from an API or database
   const tasks: Task[] = [
     {
@@ -41,10 +39,12 @@ export const TaskList = () => {
 
   const handleCompleteTask = (taskId: string) => {
     // In a real app, this would update the database
-    toast({
-      title: "Task Completed!",
-      description: "Your reward has been added to your balance.",
-    });
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      toast.success("Task Completed!", {
+        description: `You earned $${task.reward.toFixed(2)} for completing "${task.title}"`,
+      });
+    }
   };
 
   return (
@@ -61,7 +61,7 @@ export const TaskList = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Award className="text-yellow-500" />
-              <span className="font-semibold">{task.reward} points</span>
+              <span className="font-semibold">${task.reward.toFixed(2)}</span>
             </div>
             <Button
               onClick={() => handleCompleteTask(task.id)}
