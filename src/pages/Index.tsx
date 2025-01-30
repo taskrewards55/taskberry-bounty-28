@@ -8,7 +8,6 @@ import { GlobalEarning } from "@/components/GlobalEarning";
 import { InstantPayments } from "@/components/InstantPayments";
 import { EarnFromDevices } from "@/components/EarnFromDevices";
 import { FAQ } from "@/components/FAQ";
-import { TopPicks } from "@/components/TopPicks";
 import { Leaderboard } from "@/components/Leaderboard";
 import { LatestRewards } from "@/components/LatestRewards";
 import { TaskTypes } from "@/components/TaskTypes";
@@ -38,7 +37,6 @@ const Index = () => {
       </section>
 
       <TaskTypes />
-      <TopPicks />
       <Leaderboard />
       <LatestRewards />
       <TasksForEveryone />
