@@ -14,9 +14,13 @@ export const ReferralSection = () => {
   useEffect(() => {
     // Initial fetch of referral data
     const fetchReferralData = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { data: profile } = await supabase
         .from('profiles')
         .select('referral_code')
+        .eq('id', user.id)
         .single();
 
       if (profile) {
@@ -26,7 +30,7 @@ export const ReferralSection = () => {
       const { count } = await supabase
         .from('referrals')
         .select('*', { count: 'exact' })
-        .eq('referrer_id', supabase.auth.getUser()?.data?.user?.id);
+        .eq('referrer_id', user.id);
 
       if (count !== null) {
         setReferralCount(count);
@@ -45,15 +49,19 @@ export const ReferralSection = () => {
           event: 'INSERT',
           schema: 'public',
           table: 'referrals',
-          filter: `referrer_id=eq.${supabase.auth.getUser()?.data?.user?.id}`,
         },
-        () => {
-          setReferralCount(prev => {
-            const newCount = prev + 1;
-            setTotalBonus(newCount * 10);
-            toast.success("New referral bonus earned!");
-            return newCount;
-          });
+        async (payload: any) => {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) return;
+          
+          if (payload.new && payload.new.referrer_id === user.id) {
+            setReferralCount(prev => {
+              const newCount = prev + 1;
+              setTotalBonus(newCount * 10);
+              toast.success("New referral bonus earned!");
+              return newCount;
+            });
+          }
         }
       )
       .subscribe();

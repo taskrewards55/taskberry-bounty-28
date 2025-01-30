@@ -11,9 +11,13 @@ export const EarningsOverview = () => {
   useEffect(() => {
     // Initial fetch of balance
     const fetchBalance = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { data: profile } = await supabase
         .from('profiles')
         .select('balance')
+        .eq('id', user.id)
         .single();
       
       if (profile) {
@@ -32,10 +36,9 @@ export const EarningsOverview = () => {
           event: '*',
           schema: 'public',
           table: 'profiles',
-          filter: `id=eq.${supabase.auth.getUser()?.data?.user?.id}`,
         },
-        (payload) => {
-          if (payload.new) {
+        (payload: any) => {
+          if (payload.new && payload.new.balance !== undefined) {
             setBalance(payload.new.balance);
           }
         }

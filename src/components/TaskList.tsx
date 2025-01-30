@@ -11,6 +11,23 @@ export const TaskList = () => {
   const isPremiumUnlocked = completedTaskCount >= 50;
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('balance')
+        .eq('id', user.id)
+        .single();
+
+      if (profile) {
+        setTotalEarnings(profile.balance);
+      }
+    };
+
+    fetchUserData();
+
     // Subscribe to profile changes for real-time earnings updates
     const channel = supabase
       .channel('profile-changes')
@@ -20,10 +37,9 @@ export const TaskList = () => {
           event: '*',
           schema: 'public',
           table: 'profiles',
-          filter: `id=eq.${supabase.auth.getUser()?.data?.user?.id}`,
         },
-        (payload) => {
-          if (payload.new) {
+        (payload: any) => {
+          if (payload.new && payload.new.balance !== undefined) {
             setTotalEarnings(payload.new.balance);
             toast.success("Earnings updated!");
           }
