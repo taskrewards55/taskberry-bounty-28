@@ -1,5 +1,5 @@
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { ExclamationTriangleIcon } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { Card } from "./ui/card";
 
 export const EarningsOverview = () => {
@@ -25,7 +25,7 @@ export const EarningsOverview = () => {
       
       {balance < withdrawalThreshold && (
         <Alert variant="destructive" className="bg-red-900 border-red-600">
-          <ExclamationTriangleIcon className="h-4 w-4" />
+          <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Balance Below Threshold</AlertTitle>
           <AlertDescription>
             Your current balance is below the ${withdrawalThreshold} withdrawal threshold. 
