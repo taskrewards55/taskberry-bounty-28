@@ -1,5 +1,5 @@
 import { Card } from "./ui/card";
-import { Award } from "lucide-react";
+import { Award, Check } from "lucide-react";
 
 export const UserDashboard = () => {
   // This would typically come from an API or database
