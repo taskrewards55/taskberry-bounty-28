@@ -30,6 +30,7 @@ export default function PartnerWithUs() {
 
   return (
     <div className="min-h-screen bg-gray-900">
+      <Header />
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
