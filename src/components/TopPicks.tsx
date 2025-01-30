@@ -11,7 +11,7 @@ export const TopPicks = () => {
       amount: "$0.59",
     },
     {
-      logo: "/lovable-uploads/629059a5-f1bf-40ab-848b-c7235da57628.png",
+      logo: "/lovable-uploads/48829481-5df4-4529-9de7-73f5959ccd6a.png",
       title: "Honeygain",
       description: "Share your spare internet!",
       reward: "0.95",
