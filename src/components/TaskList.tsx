@@ -1,177 +1,144 @@
-import { Check, Award, Lock, AlertCircle } from "lucide-react";
-import { Button } from "./ui/button";
+import { useState } from "react";
 import { Card } from "./ui/card";
-import { toast } from "sonner";
-import { Badge } from "./ui/badge";
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  reward: number;
-  completed: boolean;
-  category: "free" | "premium" | "milestone";
-  limit?: string;
-  isLocked?: boolean;
-  lockReason?: string;
-}
+import { TaskCategory } from "./TaskCategory";
+import { Task } from "@/types/task";
 
 export const TaskList = () => {
-  // This would typically come from an API
-  const completedTaskCount = 20; // Mock data
-  const totalEarnings = 15; // Mock data
+  const [completedTaskCount] = useState(20);
+  const [totalEarnings] = useState(15);
   const isPremiumUnlocked = completedTaskCount >= 50;
 
-  const tasks: Task[] = [
-    // Free Tasks
+  const basicTasks: Task[] = [
     {
       id: "1",
       title: "Watch Videos",
-      description: "Watch short videos to earn rewards",
+      description: "Watch 30-second videos to earn rewards",
       reward: 0.05,
+      category: "basic",
       completed: false,
-      category: "free",
-      limit: "10 videos per day",
+      dailyLimit: 10,
+      currentCount: 0,
     },
     {
       id: "2",
-      title: "Complete Short Surveys",
-      description: "2-3 minute surveys for quick earnings",
+      title: "Quick Surveys",
+      description: "Complete 2-3 minute surveys",
       reward: 0.10,
+      category: "basic",
       completed: false,
-      category: "free",
     },
     {
       id: "3",
       title: "Daily Check-in",
       description: "Log in daily to earn rewards",
       reward: 0.01,
+      category: "basic",
       completed: false,
-      category: "free",
     },
     {
       id: "4",
       title: "Read Articles",
-      description: "Read and engage with articles",
+      description: "Read sponsored articles",
       reward: 0.02,
+      category: "basic",
       completed: false,
-      category: "free",
-      limit: "5 articles per day",
+      dailyLimit: 5,
+      currentCount: 0,
     },
-    // Premium Tasks
     {
       id: "5",
-      title: "Product Reviews",
-      description: "Write detailed product reviews",
-      reward: 2.00,
+      title: "Social Media Tasks",
+      description: "Follow accounts and engage with posts",
+      reward: 0.05,
+      category: "basic",
       completed: false,
-      category: "premium",
-      isLocked: !isPremiumUnlocked,
-      lockReason: "Complete 50 free tasks to unlock",
-    },
-    {
-      id: "6",
-      title: "App Installations",
-      description: "Install and test new applications",
-      reward: 1.50,
-      completed: false,
-      category: "premium",
-      isLocked: !isPremiumUnlocked,
-      lockReason: "Complete 50 free tasks to unlock",
-    },
-    // Milestone Tasks
-    {
-      id: "7",
-      title: "Task Completion Milestone",
-      description: "Complete 100 tasks for bonus reward",
-      reward: 1.00,
-      completed: false,
-      category: "milestone",
-      isLocked: completedTaskCount < 100,
-      lockReason: "Complete 100 tasks to unlock",
-    },
-    {
-      id: "8",
-      title: "7-Day Streak",
-      description: "Log in for 7 consecutive days",
-      reward: 1.00,
-      completed: false,
-      category: "milestone",
     },
   ];
 
-  const handleCompleteTask = (taskId: string) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (task) {
-      if (task.isLocked) {
-        toast.error("This task is locked!", {
-          description: task.lockReason,
-        });
-        return;
-      }
-      toast.success("Task Completed!", {
-        description: `You earned $${task.reward.toFixed(2)} for completing "${task.title}"`,
-      });
-    }
-  };
+  const premiumTasks: Task[] = [
+    {
+      id: "6",
+      title: "Product Reviews",
+      description: "Write detailed product reviews",
+      reward: 2.00,
+      category: "premium",
+      completed: false,
+    },
+    {
+      id: "7",
+      title: "App Testing",
+      description: "Test and review applications",
+      reward: 1.50,
+      category: "premium",
+      completed: false,
+    },
+    {
+      id: "8",
+      title: "Partner Signups",
+      description: "Sign up for partner programs",
+      reward: 3.00,
+      category: "premium",
+      completed: false,
+    },
+    {
+      id: "9",
+      title: "Comprehensive Surveys",
+      description: "Complete 10-15 minute detailed surveys",
+      reward: 2.00,
+      category: "premium",
+      completed: false,
+    },
+    {
+      id: "10",
+      title: "Content Creation",
+      description: "Create promotional content",
+      reward: 5.00,
+      category: "premium",
+      completed: false,
+    },
+  ];
 
-  const renderTaskSection = (category: Task["category"], title: string) => {
-    const categoryTasks = tasks.filter(task => task.category === category);
-    
-    if (categoryTasks.length === 0) return null;
-
-    return (
-      <div className="space-y-4">
-        <h3 className="text-2xl font-bold text-white mb-4">{title}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {categoryTasks.map((task) => (
-            <Card key={task.id} className={`p-6 ${task.isLocked ? 'bg-gray-700' : 'bg-gray-800'} text-white relative`}>
-              {task.isLocked && (
-                <div className="absolute top-4 right-4">
-                  <Lock className="text-yellow-500" />
-                </div>
-              )}
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-semibold">{task.title}</h3>
-                {task.completed ? (
-                  <Check className="text-green-500" />
-                ) : null}
-              </div>
-              <p className="text-gray-300 mb-4">{task.description}</p>
-              {task.limit && (
-                <Badge variant="secondary" className="mb-4">
-                  {task.limit}
-                </Badge>
-              )}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Award className="text-yellow-500" />
-                  <span className="font-semibold">${task.reward.toFixed(2)}</span>
-                </div>
-                <Button
-                  onClick={() => handleCompleteTask(task.id)}
-                  disabled={task.completed || task.isLocked}
-                  variant="default"
-                  className={task.isLocked ? "bg-gray-600" : "bg-blue-600 hover:bg-blue-700"}
-                >
-                  {task.completed ? "Completed" : task.isLocked ? "Locked" : "Complete Task"}
-                </Button>
-              </div>
-              {task.isLocked && (
-                <div className="mt-4 flex items-center gap-2 text-sm text-yellow-500">
-                  <AlertCircle className="w-4 h-4" />
-                  <span>{task.lockReason}</span>
-                </div>
-              )}
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  };
+  const achievementTasks: Task[] = [
+    {
+      id: "11",
+      title: "Task Milestone",
+      description: "Complete 100 tasks for bonus reward",
+      reward: 1.00,
+      category: "achievement",
+      completed: false,
+      unlockRequirement: {
+        type: "tasks",
+        count: 100,
+      },
+    },
+    {
+      id: "12",
+      title: "Referral Champion",
+      description: "Refer 10 active users",
+      reward: 10.00,
+      category: "achievement",
+      completed: false,
+      unlockRequirement: {
+        type: "referrals",
+        count: 10,
+      },
+    },
+    {
+      id: "13",
+      title: "Weekly Streak",
+      description: "Log in for 7 consecutive days",
+      reward: 1.00,
+      category: "achievement",
+      completed: false,
+      unlockRequirement: {
+        type: "streak",
+        count: 7,
+      },
+    },
+  ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Card className="p-4 bg-gray-800 text-white">
           <h4 className="text-gray-400 mb-2">Completed Tasks</h4>
@@ -185,19 +152,35 @@ export const TaskList = () => {
           <h4 className="text-gray-400 mb-2">Premium Status</h4>
           <div className="flex items-center gap-2">
             {isPremiumUnlocked ? (
-              <Badge variant="success" className="bg-green-500">Unlocked</Badge>
+              <span className="text-green-400">Unlocked</span>
             ) : (
-              <Badge variant="secondary" className="bg-gray-600">
+              <span className="text-yellow-400">
                 {50 - completedTaskCount} tasks to unlock
-              </Badge>
+              </span>
             )}
           </div>
         </Card>
       </div>
-      
-      {renderTaskSection("free", "Free Tasks")}
-      {renderTaskSection("premium", "Premium Tasks")}
-      {renderTaskSection("milestone", "Milestone Tasks")}
+
+      <TaskCategory
+        title="Basic Tasks"
+        description="Complete these tasks to earn rewards and unlock premium tasks"
+        tasks={basicTasks}
+      />
+
+      <TaskCategory
+        title="Premium Tasks"
+        description="Higher-paying tasks for experienced users"
+        tasks={premiumTasks}
+        isLocked={!isPremiumUnlocked}
+        unlockRequirement="50 basic tasks"
+      />
+
+      <TaskCategory
+        title="Achievements"
+        description="Special rewards for reaching milestones"
+        tasks={achievementTasks}
+      />
     </div>
   );
 };
