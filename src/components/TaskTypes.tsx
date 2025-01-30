@@ -1,73 +1,92 @@
-import { List, Database, ChartBar, Wifi } from "lucide-react";
+import React from "react";
+import { ArrowRight } from "lucide-react";
 import { Card } from "./ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+
+interface TaskType {
+  icon: string;
+  title: string;
+  description: string;
+}
 
 export const TaskTypes = () => {
-  const tasks = [
+  const taskTypes: TaskType[] = [
     {
-      icon: <List className="w-8 h-8 text-white" />,
-      title: "Tasks",
-      description: "Earn by doing various microtasks",
-      bgColor: "bg-emerald-500",
-      badge: "New tasks everyday",
+      icon: "🎮",
+      title: "Gaming Tasks",
+      description: "Play games and earn rewards for your achievements",
     },
     {
-      icon: <Database className="w-8 h-8 text-white" />,
-      title: "Staking",
-      description: "Investing JumpTokens",
-      bgColor: "bg-pink-500",
-      badge: "🔥",
-    },
-    {
-      icon: <ChartBar className="w-8 h-8 text-white" />,
+      icon: "📝",
       title: "Surveys",
-      description: "Sharing opinion",
-      bgColor: "bg-red-600",
+      description: "Share your opinion and get paid for your feedback",
     },
     {
-      icon: <Wifi className="w-8 h-8 text-white" />,
-      title: "Honeygain",
-      description: "Bandwidth sharing",
-      bgColor: "bg-amber-400",
+      icon: "🌐",
+      title: "Web Tasks",
+      description: "Complete simple web-based tasks for quick earnings",
+    },
+    {
+      icon: "📱",
+      title: "Mobile Tasks",
+      description: "Test mobile apps and earn rewards on the go",
+    },
+    {
+      icon: "💡",
+      title: "Creative Tasks",
+      description: "Use your creativity to complete unique assignments",
     },
   ];
 
-  return (
-    <section className="py-12 bg-gray-900">
-      <div className="container mx-auto px-4">
-        <div className="space-y-4 mb-8">
-          <h2 className="text-3xl font-bold text-white">Have a minute?</h2>
-          <p className="text-2xl font-semibold text-emerald-400">Earn now!</p>
-          <p className="text-gray-300">Choose one of the task types and start.</p>
-        </div>
+  const plugin = React.useMemo(
+    () =>
+      Autoplay({
+        delay: 4000,
+        stopOnInteraction: true,
+      }),
+    []
+  );
 
-        <div className="grid md:grid-cols-2 gap-4">
-          {tasks.map((task, index) => (
-            <Card
-              key={index}
-              className={`${task.bgColor} p-6 cursor-pointer group transition-transform hover:scale-[1.02] animate-fade-up`}
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="p-2 bg-white/10 rounded-full">
-                    {task.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-semibold text-white mb-1">
-                      {task.title}
-                    </h3>
-                    <p className="text-white/80">{task.description}</p>
-                  </div>
-                </div>
-                {task.badge && (
-                  <span className="px-3 py-1 bg-white/10 rounded-full text-sm text-white">
-                    {task.badge}
-                  </span>
-                )}
-              </div>
-            </Card>
-          ))}
+  return (
+    <section className="py-16 bg-gray-900">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-white">Task Types</h2>
+          <button className="text-blue-400 hover:text-blue-300 flex items-center gap-2">
+            View all <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[plugin]}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {taskTypes.map((task, index) => (
+              <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                <Card className="bg-gray-800 border-gray-700 h-full">
+                  <div className="p-6">
+                    <div className="text-4xl mb-4">{task.icon}</div>
+                    <h3 className="text-xl font-bold text-white mb-2">{task.title}</h3>
+                    <p className="text-gray-400">{task.description}</p>
+                  </div>
+                </Card>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="hidden md:flex" />
+          <CarouselNext className="hidden md:flex" />
+        </Carousel>
       </div>
     </section>
   );
