@@ -38,6 +38,8 @@ export const Leaderboard = () => {
           opts={{
             align: "start",
             loop: true,
+            autoplay: true,
+            interval: 3000,
           }}
           className="w-full"
         >
