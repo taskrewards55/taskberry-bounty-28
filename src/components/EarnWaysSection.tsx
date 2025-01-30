@@ -41,7 +41,7 @@ const ways = [
   },
 ];
 
-const EarnWaysSection = () => {
+export const EarnWaysSection = () => {
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -73,5 +73,3 @@ const EarnWaysSection = () => {
     </section>
   );
 };
-
-export default EarnWaysSection;
