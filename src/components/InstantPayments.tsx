@@ -11,8 +11,8 @@ export const InstantPayments = () => {
           </div>
           <div className="w-full lg:w-1/2">
             <img 
-              src="/lovable-uploads/738b88e7-1781-4f01-ae47-bd233939517f.png" 
-              alt="Instant payment visualization with stacked coins"
+              src="/lovable-uploads/c536270c-bfe1-4c6b-8879-9eadcf4de7fc.png" 
+              alt="Stack of shiny cryptocurrency coins"
               className="w-full h-auto rounded-lg shadow-xl animate-fade-up"
             />
           </div>
