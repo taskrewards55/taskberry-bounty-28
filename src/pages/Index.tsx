@@ -2,7 +2,7 @@ import { Header } from "@/components/Header";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Button } from "@/components/ui/button";
 import VisionSection from "@/components/VisionSection";
-import EarnWaysSection from "@/components/EarnWaysSection";
+import { EarnWaysSection } from "@/components/EarnWaysSection";
 import { TasksForEveryone } from "@/components/TasksForEveryone";
 import { GlobalEarning } from "@/components/GlobalEarning";
 import { InstantPayments } from "@/components/InstantPayments";
