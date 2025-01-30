@@ -1,3 +1,4 @@
+import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, BarChart2, Users, TrendingUp } from "lucide-react";
 

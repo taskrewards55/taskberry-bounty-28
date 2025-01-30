@@ -1,3 +1,4 @@
+import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { BookOpen, HelpCircle, Users, TrendingUp } from "lucide-react";
 
