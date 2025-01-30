@@ -20,7 +20,7 @@ export type Database = {
           balance?: number
           created_at?: string
           id: string
-          referral_code: string
+          referral_code?: string
         }
         Update: {
           balance?: number
