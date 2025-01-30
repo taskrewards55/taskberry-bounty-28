@@ -7,6 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 interface LeaderboardEntry {
   position: number;
@@ -25,6 +26,15 @@ export const Leaderboard = () => {
     { position: 5, userId: "userd3f77cb8ee28", amount: "13.06169", usdAmount: "$15.00", avatarColor: "bg-green-400" },
   ];
 
+  const plugin = React.useMemo(
+    () =>
+      Autoplay({
+        delay: 3000,
+        stopOnInteraction: true,
+      }),
+    []
+  );
+
   return (
     <section className="py-16 bg-gray-900">
       <div className="container mx-auto px-4">
@@ -38,9 +48,8 @@ export const Leaderboard = () => {
           opts={{
             align: "start",
             loop: true,
-            autoplay: true,
-            interval: 3000,
           }}
+          plugins={[plugin]}
           className="w-full"
         >
           <CarouselContent className="-ml-2 md:-ml-4">
