@@ -5,7 +5,7 @@ export const GlobalEarning = () => {
         <div className="flex flex-col lg:flex-row items-center gap-8 md:gap-12">
           <div className="w-full lg:w-1/2">
             <img 
-              src="/lovable-uploads/c3974575-a35a-4ac4-93e2-4829019c8870.png" 
+              src="/lovable-uploads/58f7c299-ee2e-4257-9f10-7ae605da8232.png" 
               alt="Global digital earth visualization"
               className="w-full h-auto rounded-lg shadow-xl animate-fade-up"
             />
