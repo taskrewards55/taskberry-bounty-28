@@ -7,6 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 interface Reward {
   icon: string;
@@ -23,6 +24,16 @@ export const LatestRewards = () => {
     { icon: "🎮", amount: "0.01", usdAmount: "$0.01" },
   ];
 
+  const plugin = React.useMemo(
+    () =>
+      Autoplay({
+        delay: 4000,
+        stopOnInteraction: true,
+        stopOnMouseEnter: true,
+      }),
+    []
+  );
+
   return (
     <section className="py-16 bg-gray-900">
       <div className="container mx-auto px-4">
@@ -37,6 +48,7 @@ export const LatestRewards = () => {
             align: "start",
             loop: true,
           }}
+          plugins={[plugin]}
           className="w-full"
         >
           <CarouselContent className="-ml-2 md:-ml-4">
