@@ -36,6 +36,7 @@ const Index = () => {
         </div>
       </section>
 
+      <EarnWaysSection />
       <TaskTypes />
       <Leaderboard />
       <LatestRewards />
@@ -43,7 +44,6 @@ const Index = () => {
       <GlobalEarning />
       <InstantPayments />
       <VisionSection />
-      <EarnWaysSection />
       <EarnFromDevices />
       <HowItWorks />
       <FAQ />
