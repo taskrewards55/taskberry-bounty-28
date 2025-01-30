@@ -8,6 +8,7 @@ import EarnRewards from "./pages/EarnRewards";
 import HowItWorks from "./pages/HowItWorks";
 import PartnerWithUs from "./pages/PartnerWithUs";
 import Learn from "./pages/Learn";
+import Tasks from "./pages/Tasks";
 import { Footer } from "./components/Footer";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/partner-with-us" element={<PartnerWithUs />} />
               <Route path="/learn" element={<Learn />} />
+              <Route path="/tasks" element={<Tasks />} />
             </Routes>
           </div>
           <Footer />

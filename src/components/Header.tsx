@@ -21,6 +21,9 @@ export const Header = () => {
           </Link>
           {!isMobile && (
             <nav className="flex space-x-6">
+              <Link to="/tasks" className="text-gray-300 hover:text-emerald-500 transition-colors">
+                Tasks
+              </Link>
               <Link to="/earn-rewards" className="text-gray-300 hover:text-emerald-500 transition-colors">
                 Earn Rewards
               </Link>
@@ -53,6 +56,13 @@ export const Header = () => {
       {isMobile && isMenuOpen && (
         <nav className="bg-gray-900 px-4 py-2 animate-fade-up">
           <div className="flex flex-col space-y-4">
+            <Link 
+              to="/tasks" 
+              className="text-gray-300 hover:text-emerald-500 transition-colors py-2 border-b border-gray-800"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Tasks
+            </Link>
             <Link 
               to="/earn-rewards" 
               className="text-gray-300 hover:text-emerald-500 transition-colors py-2 border-b border-gray-800"
