@@ -17,11 +17,25 @@ export default function Auth() {
   const navigate = useNavigate();
   const { session } = useSession();
 
-  // Redirect if already authenticated
   useEffect(() => {
+    // Subscribe to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+      if (event === 'SIGNED_IN') {
+        toast.success("Successfully logged in!");
+        navigate("/tasks");
+      } else if (event === 'SIGNED_OUT') {
+        navigate("/auth");
+      }
+    });
+
+    // Redirect if already authenticated
     if (session) {
       navigate("/tasks");
     }
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [session, navigate]);
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -52,11 +66,6 @@ export default function Auth() {
         });
         
         if (error) throw error;
-        
-        if (data.user) {
-          toast.success("Successfully logged in!");
-          navigate("/tasks");
-        }
       }
     } catch (error: any) {
       toast.error(error.message);
