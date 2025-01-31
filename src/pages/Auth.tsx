@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
+import { useSession } from "@/App";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,14 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
+  const { session } = useSession();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (session) {
+      navigate("/tasks");
+    }
+  }, [session, navigate]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +30,7 @@ export default function Auth() {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -30,16 +39,24 @@ export default function Auth() {
             }
           }
         });
+        
         if (error) throw error;
-        toast.success("Registration successful! Please check your email to verify your account.");
+        
+        if (data.user) {
+          toast.success("Registration successful! Please check your email to verify your account.");
+        }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password
         });
+        
         if (error) throw error;
-        toast.success("Successfully logged in!");
-        navigate("/tasks");
+        
+        if (data.user) {
+          toast.success("Successfully logged in!");
+          navigate("/tasks");
+        }
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -100,7 +117,7 @@ export default function Auth() {
               )}
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full bg-emerald-500 hover:bg-emerald-600"
                 disabled={isLoading}
               >
                 {isLoading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
