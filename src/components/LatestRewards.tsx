@@ -1,42 +1,41 @@
 import { ArrowRight } from "lucide-react";
 import { Card } from "./ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "./ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import * as React from "react";
-
 interface Reward {
   icon: string;
   amount: string;
   usdAmount: string;
 }
-
 export const LatestRewards = () => {
-  const rewards: Reward[] = [
-    { icon: "🪙", amount: "13.54", usdAmount: "$15.55" },
-    { icon: "🛍️", amount: "1.04", usdAmount: "$1.20" },
-    { icon: "📦", amount: "0.01", usdAmount: "$0.01" },
-    { icon: "✈️", amount: "0.3", usdAmount: "$0.35" },
-    { icon: "🎮", amount: "0.01", usdAmount: "$0.01" },
-  ];
-
-  const plugin = React.useMemo(
-    () =>
-      Autoplay({
-        delay: 4000,
-        stopOnInteraction: true,
-        stopOnMouseEnter: true,
-      }),
-    []
-  );
-
-  return (
-    <section className="py-16 bg-gray-900">
+  const rewards: Reward[] = [{
+    icon: "🪙",
+    amount: "13.54",
+    usdAmount: "$15.55"
+  }, {
+    icon: "🛍️",
+    amount: "1.04",
+    usdAmount: "$1.20"
+  }, {
+    icon: "📦",
+    amount: "0.01",
+    usdAmount: "$0.01"
+  }, {
+    icon: "✈️",
+    amount: "0.3",
+    usdAmount: "$0.35"
+  }, {
+    icon: "🎮",
+    amount: "0.01",
+    usdAmount: "$0.01"
+  }];
+  const plugin = React.useMemo(() => Autoplay({
+    delay: 4000,
+    stopOnInteraction: true,
+    stopOnMouseEnter: true
+  }), []);
+  return <section className="bg-gray-900 py-[40px]">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-white">Latest rewards</h2>
@@ -44,17 +43,12 @@ export const LatestRewards = () => {
             View all <ArrowRight className="w-4 h-4" />
           </button>
         </div>
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          plugins={[plugin]}
-          className="w-full"
-        >
+        <Carousel opts={{
+        align: "start",
+        loop: true
+      }} plugins={[plugin]} className="w-full">
           <CarouselContent className="-ml-2 md:-ml-4">
-            {rewards.map((reward, index) => (
-              <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/4 lg:basis-1/5">
+            {rewards.map((reward, index) => <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/4 lg:basis-1/5">
                 <Card className="bg-gray-800 border-gray-700">
                   <div className="p-4">
                     <div className="text-4xl mb-4">{reward.icon}</div>
@@ -67,13 +61,11 @@ export const LatestRewards = () => {
                     </div>
                   </div>
                 </Card>
-              </CarouselItem>
-            ))}
+              </CarouselItem>)}
           </CarouselContent>
           <CarouselPrevious className="hidden md:flex" />
           <CarouselNext className="hidden md:flex" />
         </Carousel>
       </div>
-    </section>
-  );
+    </section>;
 };
