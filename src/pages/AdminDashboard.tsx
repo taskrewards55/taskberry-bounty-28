@@ -15,17 +15,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useSession } from "@/App";
+import type { Database } from "@/integrations/supabase/types";
 
-interface Profile {
+type Profile = Database['public']['Tables']['profiles']['Row'];
+type AuthUser = {
+  email: string | undefined;
   id: string;
+};
+
+interface UserWithProfile extends Profile {
   email: string;
-  referral_code: string;
-  balance: number;
-  created_at: string;
 }
 
 export default function AdminDashboard() {
-  const [users, setUsers] = useState<Profile[]>([]);
+  const [users, setUsers] = useState<UserWithProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
@@ -73,18 +76,15 @@ export default function AdminDashboard() {
         if (usersError) throw usersError;
 
         // Combine the data
-        const combinedData = profiles?.map(profile => {
+        const combinedData = (profiles || []).map(profile => {
           const user = authData.users.find(u => u.id === profile.id);
           return {
-            id: profile.id,
-            email: user?.email || 'N/A',
-            referral_code: profile.referral_code,
-            balance: profile.balance,
-            created_at: profile.created_at
+            ...profile,
+            email: user?.email || 'N/A'
           };
         });
 
-        setUsers(combinedData || []);
+        setUsers(combinedData);
       } catch (error: any) {
         toast.error(error.message);
       } finally {
