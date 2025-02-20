@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +14,7 @@ import HowItWorks from "./pages/HowItWorks";
 import PartnerWithUs from "./pages/PartnerWithUs";
 import Learn from "./pages/Learn";
 import Tasks from "./pages/Tasks";
+import AdminDashboard from "./pages/AdminDashboard";
 import { Footer } from "./components/Footer";
 
 const queryClient = new QueryClient();
@@ -92,6 +94,14 @@ const App = () => (
                   element={
                     <ProtectedRoute>
                       <Tasks />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute>
+                      <AdminDashboard />
                     </ProtectedRoute>
                   } 
                 />

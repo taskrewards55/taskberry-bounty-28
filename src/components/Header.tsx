@@ -1,119 +1,131 @@
-import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import { Menu } from "lucide-react";
-import { useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { useSession } from "@/App";
 
-export const Header = () => {
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useSession } from "@/App";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+
+export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const location = useLocation();
   const { session } = useSession();
-  const isMobile = useIsMobile();
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (!session) return;
+      
+      const { data, error } = await supabase.rpc('is_admin');
+      if (!error && data) {
+        setIsAdmin(true);
+      }
+    };
+
+    checkAdminStatus();
+  }, [session]);
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Successfully signed out!");
-      navigate("/");
-    }
+    await supabase.auth.signOut();
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const navigation = [
+    { name: "Earn Rewards", href: "/earn-rewards" },
+    { name: "How It Works", href: "/how-it-works" },
+    { name: "Partner with Us", href: "/partner-with-us" },
+    { name: "Learn", href: "/learn" },
+    ...(session ? [{ name: "Tasks", href: "/tasks" }] : []),
+    ...(isAdmin ? [{ name: "Admin", href: "/admin" }] : []),
+  ];
 
   return (
-    <header className="w-full border-b border-gray-800 bg-gray-900">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-8">
-          <Link to="/" className="text-2xl font-bold text-emerald-500">
-            TaskRewards
-          </Link>
-          {!isMobile && (
-            <nav className="flex space-x-6">
-              <Link to="/tasks" className="text-gray-300 hover:text-emerald-500 transition-colors">
-                Tasks
-              </Link>
-              <Link to="/earn-rewards" className="text-gray-300 hover:text-emerald-500 transition-colors">
-                Earn Rewards
-              </Link>
-              <Link to="/how-it-works" className="text-gray-300 hover:text-emerald-500 transition-colors">
-                How It Works
-              </Link>
-              <Link to="/partner-with-us" className="text-gray-300 hover:text-emerald-500 transition-colors">
-                Partner With Us
-              </Link>
-              <Link to="/learn" className="text-gray-300 hover:text-emerald-500 transition-colors">
-                Learn
-              </Link>
-            </nav>
-          )}
-        </div>
-
-        <div className="flex items-center space-x-4">
-          {session ? (
-            <Button onClick={handleSignOut} variant="destructive">
-              Sign Out
-            </Button>
-          ) : (
-            <Button onClick={() => navigate("/auth")} className="bg-emerald-500 hover:bg-emerald-600">
-              Sign In
-            </Button>
-          )}
-          {isMobile && (
-            <Button variant="ghost" size="icon" onClick={toggleMenu} className="text-gray-300">
-              <Menu className="h-6 w-6" />
-            </Button>
-          )}
-        </div>
-      </div>
-
-      {isMobile && isMenuOpen && (
-        <nav className="bg-gray-900 px-4 py-2 animate-fade-up">
-          <div className="flex flex-col space-y-4">
-            <Link 
-              to="/tasks" 
-              className="text-gray-300 hover:text-emerald-500 transition-colors py-2 border-b border-gray-800"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Tasks
+    <header className="bg-gray-800">
+      <nav className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-16">
+            <Link to="/" className="text-white text-2xl font-bold">
+              Logo
             </Link>
-            <Link 
-              to="/earn-rewards" 
-              className="text-gray-300 hover:text-emerald-500 transition-colors py-2 border-b border-gray-800"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Earn Rewards
-            </Link>
-            <Link 
-              to="/how-it-works" 
-              className="text-gray-300 hover:text-emerald-500 transition-colors py-2 border-b border-gray-800"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              How It Works
-            </Link>
-            <Link 
-              to="/partner-with-us" 
-              className="text-gray-300 hover:text-emerald-500 transition-colors py-2 border-b border-gray-800"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Partner With Us
-            </Link>
-            <Link 
-              to="/learn" 
-              className="text-gray-300 hover:text-emerald-500 transition-colors py-2 border-b border-gray-800"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Learn
-            </Link>
+            <div className="hidden md:flex items-center gap-8">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`text-sm ${
+                    location.pathname === item.href
+                      ? "text-white font-semibold"
+                      : "text-gray-300 hover:text-white"
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
           </div>
-        </nav>
-      )}
+          <div className="hidden md:flex items-center gap-4">
+            {session ? (
+              <Button
+                variant="outline"
+                className="text-white hover:text-gray-800"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </Button>
+            ) : (
+              <Link to="/auth">
+                <Button variant="outline" className="text-white hover:text-gray-800">
+                  Sign In
+                </Button>
+              </Link>
+            )}
+          </div>
+          <button
+            className="md:hidden text-white"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+        {isMenuOpen && (
+          <div className="md:hidden mt-4 space-y-2">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`block py-2 ${
+                  location.pathname === item.href
+                    ? "text-white font-semibold"
+                    : "text-gray-300 hover:text-white"
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
+            {session ? (
+              <Button
+                variant="outline"
+                className="w-full text-white hover:text-gray-800 mt-4"
+                onClick={() => {
+                  handleSignOut();
+                  setIsMenuOpen(false);
+                }}
+              >
+                Sign Out
+              </Button>
+            ) : (
+              <Link to="/auth" className="block" onClick={() => setIsMenuOpen(false)}>
+                <Button
+                  variant="outline"
+                  className="w-full text-white hover:text-gray-800 mt-4"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            )}
+          </div>
+        )}
+      </nav>
     </header>
   );
-};
+}
