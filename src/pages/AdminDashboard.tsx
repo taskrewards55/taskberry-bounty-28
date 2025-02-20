@@ -16,12 +16,9 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useSession } from "@/App";
 import type { Database } from "@/integrations/supabase/types";
+import type { User } from '@supabase/supabase-js';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
-type AuthUser = {
-  email: string | undefined;
-  id: string;
-};
 
 interface UserWithProfile extends Profile {
   email: string;
@@ -72,7 +69,9 @@ export default function AdminDashboard() {
         if (profilesError) throw profilesError;
 
         // Fetch users to get emails
-        const { data: authData, error: usersError } = await supabase.auth.admin.listUsers();
+        const { data: authData, error: usersError } = await supabase.auth.admin.listUsers() as 
+          { data: { users: User[] }, error: null | Error };
+          
         if (usersError) throw usersError;
 
         // Combine the data
