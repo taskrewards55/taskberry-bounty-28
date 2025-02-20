@@ -63,7 +63,7 @@ export function Header() {
             </div>
           </div>
           <div className="hidden md:flex items-center gap-4">
-            {session ? <Button variant="outline" onClick={handleSignOut} className="text-inherit">
+            {session ? <Button variant="outline" className="text-white hover:text-gray-800" onClick={handleSignOut}>
                 Sign Out
               </Button> : <Link to="/auth">
                 <Button variant="outline" className="text-white hover:text-gray-800">
@@ -71,7 +71,7 @@ export function Header() {
                 </Button>
               </Link>}
           </div>
-          <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-zinc-950">
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
