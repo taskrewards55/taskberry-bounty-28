@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,7 +15,6 @@ import Learn from "./pages/Learn";
 import Tasks from "./pages/Tasks";
 import AdminDashboard from "./pages/AdminDashboard";
 import { Footer } from "./components/Footer";
-
 const queryClient = new QueryClient();
 
 // Create session context
@@ -25,62 +23,69 @@ const SessionContext = createContext<{
   loading: boolean;
 }>({
   session: null,
-  loading: true,
+  loading: true
 });
-
 export const useSession = () => useContext(SessionContext);
-
-const SessionProvider = ({ children }: { children: React.ReactNode }) => {
+const SessionProvider = ({
+  children
+}: {
+  children: React.ReactNode;
+}) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({
+      data: {
+        session
+      }
+    }) => {
       setSession(session);
       setLoading(false);
     });
 
     // Listen for auth changes
     const {
-      data: { subscription },
+      data: {
+        subscription
+      }
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setLoading(false);
     });
-
     return () => subscription.unsubscribe();
   }, []);
-
-  return (
-    <SessionContext.Provider value={{ session, loading }}>
+  return <SessionContext.Provider value={{
+    session,
+    loading
+  }}>
       {children}
-    </SessionContext.Provider>
-  );
+    </SessionContext.Provider>;
 };
-
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { session, loading } = useSession();
-
+const ProtectedRoute = ({
+  children
+}: {
+  children: React.ReactNode;
+}) => {
+  const {
+    session,
+    loading
+  } = useSession();
   if (loading) {
     return <div>Loading...</div>;
   }
-
   if (!session) {
     return <Navigate to="/auth" />;
   }
-
   return <>{children}</>;
 };
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const App = () => <QueryClientProvider client={queryClient}>
     <SessionProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen bg-gray-900 hover:bg-gray-800">
             <div className="flex-grow">
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -89,22 +94,12 @@ const App = () => (
                 <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/partner-with-us" element={<PartnerWithUs />} />
                 <Route path="/learn" element={<Learn />} />
-                <Route 
-                  path="/tasks" 
-                  element={
-                    <ProtectedRoute>
+                <Route path="/tasks" element={<ProtectedRoute>
                       <Tasks />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin" 
-                  element={
-                    <ProtectedRoute>
+                    </ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute>
                       <AdminDashboard />
-                    </ProtectedRoute>
-                  } 
-                />
+                    </ProtectedRoute>} />
               </Routes>
             </div>
             <Footer />
@@ -112,7 +107,5 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </SessionProvider>
-  </QueryClientProvider>
-);
-
+  </QueryClientProvider>;
 export default App;
