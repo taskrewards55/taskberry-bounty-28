@@ -57,7 +57,21 @@ export type Database = {
             foreignKeyName: "referrals_referred_id_fkey"
             columns: ["referred_id"]
             isOneToOne: true
+            referencedRelation: "admin_user_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_referred_id_fkey"
+            columns: ["referred_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "admin_user_view"
             referencedColumns: ["id"]
           },
           {
@@ -92,12 +106,31 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_user_view: {
+        Row: {
+          balance: number | null
+          created_at: string | null
+          email: string | null
+          id: string | null
+          referral_code: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       generate_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_admin_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          email: string
+          balance: number
+          referral_code: string
+          created_at: string
+        }[]
       }
       has_role: {
         Args: {

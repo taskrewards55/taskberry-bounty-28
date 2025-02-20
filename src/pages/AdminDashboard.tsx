@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useSession } from "@/App";
 import type { Database } from "@/integrations/supabase/types";
-import type { User } from '@supabase/supabase-js';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
@@ -61,29 +60,11 @@ export default function AdminDashboard() {
 
     const fetchUsers = async () => {
       try {
-        // Fetch profiles
-        const { data: profiles, error: profilesError } = await supabase
-          .from('profiles')
-          .select('*');
+        const { data, error } = await supabase
+          .rpc('get_admin_users') as { data: UserWithProfile[], error: null | Error };
 
-        if (profilesError) throw profilesError;
-
-        // Fetch users to get emails
-        const { data: authData, error: usersError } = await supabase.auth.admin.listUsers() as 
-          { data: { users: User[] }, error: null | Error };
-          
-        if (usersError) throw usersError;
-
-        // Combine the data
-        const combinedData = (profiles || []).map(profile => {
-          const user = authData.users.find(u => u.id === profile.id);
-          return {
-            ...profile,
-            email: user?.email || 'N/A'
-          };
-        });
-
-        setUsers(combinedData);
+        if (error) throw error;
+        setUsers(data || []);
       } catch (error: any) {
         toast.error(error.message);
       } finally {
