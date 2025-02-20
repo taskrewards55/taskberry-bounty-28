@@ -33,8 +33,8 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const checkAdminStatus = async () => {
-      const { data, error } = await supabase
-        .rpc('is_admin');
+      const { data: isAdminUser, error } = await supabase
+        .rpc('is_admin') as { data: boolean, error: null | Error };
       
       if (error) {
         console.error('Error checking admin status:', error);
@@ -42,8 +42,8 @@ export default function AdminDashboard() {
         return;
       }
 
-      setIsAdmin(data);
-      if (!data) {
+      setIsAdmin(isAdminUser);
+      if (!isAdminUser) {
         toast.error("Unauthorized access");
         navigate('/');
       }
@@ -69,15 +69,18 @@ export default function AdminDashboard() {
         if (profilesError) throw profilesError;
 
         // Fetch users to get emails
-        const { data: users, error: usersError } = await supabase.auth.admin.listUsers();
+        const { data: authData, error: usersError } = await supabase.auth.admin.listUsers();
         if (usersError) throw usersError;
 
         // Combine the data
         const combinedData = profiles?.map(profile => {
-          const user = users.users.find(u => u.id === profile.id);
+          const user = authData.users.find(u => u.id === profile.id);
           return {
-            ...profile,
-            email: user?.email || 'N/A'
+            id: profile.id,
+            email: user?.email || 'N/A',
+            referral_code: profile.referral_code,
+            balance: profile.balance,
+            created_at: profile.created_at
           };
         });
 

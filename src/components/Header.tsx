@@ -16,8 +16,8 @@ export function Header() {
     const checkAdminStatus = async () => {
       if (!session) return;
       
-      const { data, error } = await supabase.rpc('is_admin');
-      if (!error && data) {
+      const { data: isAdminUser, error } = await supabase.rpc('is_admin') as { data: boolean, error: null | Error };
+      if (!error && isAdminUser) {
         setIsAdmin(true);
       }
     };
